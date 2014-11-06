@@ -1,7 +1,7 @@
 image: go1.3
 
 script:
-  - "go get"
+  - "go get -v "
   - "go test"
 
 notification:
