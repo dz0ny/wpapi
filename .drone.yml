@@ -1,0 +1,11 @@
+image: go1.3
+
+script:
+  - "go get"
+  - "go test"
+
+notification:
+  irc:
+    channel: "#niteoweb"
+    server: "chat.freenode.net:6666"
+    nick: "Niteoweb[drone]"
