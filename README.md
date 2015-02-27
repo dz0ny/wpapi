@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/dz0ny/wpapi.svg?branch=master)](https://travis-ci.org/dz0ny/wpapi)
+
 # Deploy
 1. heroku create -b https://github.com/kr/heroku-buildpack-go.git
 2. git push
