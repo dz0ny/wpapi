@@ -1,0 +1,18 @@
+language: go
+go:
+- 1.4
+install:
+- go get -v
+script:
+- go test -v
+deploy:
+  provider: heroku
+  api_key:
+    secure: C3WVudqQYKvNcvIc14utVBE1Hvh1NkCAs9ARgMXXctJ1x6bZVK74C7vcDaVqJlRGMQuLptApJauNVHOgnLFPebkoInohcZr9xo5HtEVkOE4xDyD6h4CylSLX4+wLQuzMqgpSPey+K55j411L4BON/aKEc3fSgOpscrwcDdERqAE=
+  app: wpapi
+  on:
+    repo: dz0ny/wpapi
+notifications:
+  irc:
+    channels: "irc.freenode.org#niteoweb"
+    template: "%{repository}/#%{build_number}/%{branch} (%{author}): %{message} %{build_url}"

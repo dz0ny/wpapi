@@ -5,17 +5,17 @@ import (
 )
 
 func TestGetTheme(t *testing.T) {
-	zip := GetTheme("editor")
-	t.Log(zip)
-	if zip == "" {
+	href, found := GetTheme("editor")
+	t.Log(href)
+	if href == "" || !found {
 		t.Fail()
 	}
 }
 
 func TestGetPLugin(t *testing.T) {
-	zip := GetPlugin("akismet")
-	t.Log(zip)
-	if zip == "" {
+	href, found := GetPlugin("akismet")
+	t.Log(href)
+	if href == "" || !found {
 		t.Fail()
 	}
 }

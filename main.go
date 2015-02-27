@@ -22,7 +22,7 @@ func GetTheme(name string) (string, bool) {
 	if err != nil {
 		return "", false
 	}
-	href, found := doc.Find(".col-3 .button a").First().Attr("href")
+	href, found := doc.Find(".theme-about.hentry > div.theme-head > div > a.button.button-primary").First().Attr("href")
 	return href, found
 }
 
