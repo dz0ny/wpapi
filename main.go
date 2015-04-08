@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -22,7 +23,7 @@ func GetTheme(name string) (string, bool) {
 	if err != nil {
 		return "", false
 	}
-	href, found := doc.Find(".theme-about.hentry > div.theme-head > div > a.button.button-primary").First().Attr("href")
+	href, found := doc.Find("#themes .theme-actions a.button-primary").First().Attr("href")
 	return href, found
 }
 
@@ -36,9 +37,33 @@ func GetPlugin(name string) (string, bool) {
 	return href, found
 }
 
+func GetThemeThumbnail(name string) (string, bool) {
+	url := fmt.Sprintf("https://wordpress.org/themes/%s", name)
+	doc, err := goquery.NewDocument(url)
+	if err != nil {
+		return "", false
+	}
+	href, found := doc.Find("#themes .screenshot img").First().Attr("src")
+	if found {
+		href = strings.Replace(href, "w=1142", "w=160", -1)
+	}
+	return href, found
+}
+
 func GetThemeCached(name string) string {
 	return hoard.Get(fmt.Sprintf("GetTheme_%s", name), func() (interface{}, *hoard.Expiration) {
 		url, found := GetTheme(name)
+		if found {
+			return url, hoard.Expires().AfterMinutes(5)
+		} else {
+			return "", hoard.Expires().AfterMinutes(30)
+		}
+	}).(string)
+}
+
+func GetThemeThumbnailCached(name string) string {
+	return hoard.Get(fmt.Sprintf("GetThemeThumbnail_%s", name), func() (interface{}, *hoard.Expiration) {
+		url, found := GetThemeThumbnail(name)
 		if found {
 			return url, hoard.Expires().AfterMinutes(5)
 		} else {
@@ -107,6 +132,17 @@ func main() {
 		log.Println(url)
 		if url != "" {
 			http.Redirect(w, r, url, 302)
+			return
+		} else {
+			http.NotFound(w, r)
+			return
+		}
+	})
+
+	m.Get("/theme/:name/thumbnail", func(r *http.Request, w http.ResponseWriter, params martini.Params) {
+		url := GetThemeThumbnailCached(params["name"])
+		if url != "" {
+			http.Redirect(w, r, url, 301)
 			return
 		} else {
 			http.NotFound(w, r)

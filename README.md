@@ -19,6 +19,7 @@
 # API
 
 - Latest URL for theme ```http://wpapi.herokuapp.com/theme/editor/zip```
+- Latest URL for theme thumbnail```http://wpapi.herokuapp.com/theme/editor/thumbnail```
 - Latest URL for direct theme download ```http://wpapi.herokuapp.com/theme/editor/download```
 - Latest URL for plugin ```http://wpapi.herokuapp.com/plugin/akismet/zip```
 - Latest URL for direct plugin download ```http://wpapi.herokuapp.com/plugin/akismet/download```
