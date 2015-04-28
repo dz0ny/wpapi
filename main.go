@@ -82,7 +82,17 @@ func themeCached(c *gin.Context) {
 	name := c.Params.ByName("name")
 	url := getThemeCached(name)
 	if url != "" {
-		c.Redirect(http.StatusMovedPermanently, url)
+		c.Redirect(http.StatusFound, url)
+	} else {
+		c.String(http.StatusNotFound, "Theme was not found")
+	}
+}
+
+func themeCachedString(c *gin.Context) {
+	name := c.Params.ByName("name")
+	url := getThemeCached(name)
+	if url != "" {
+		c.String(http.StatusOK, url)
 	} else {
 		c.String(http.StatusNotFound, "Theme was not found")
 	}
@@ -92,7 +102,17 @@ func pluginCached(c *gin.Context) {
 	name := c.Params.ByName("name")
 	url := getPluginCached(name)
 	if url != "" {
-		c.Redirect(http.StatusMovedPermanently, url)
+		c.Redirect(http.StatusFound, url)
+	} else {
+		c.String(http.StatusNotFound, "Plugin was not found")
+	}
+}
+
+func pluginCachedString(c *gin.Context) {
+	name := c.Params.ByName("name")
+	url := getPluginCached(name)
+	if url != "" {
+		c.String(http.StatusOK, url)
 	} else {
 		c.String(http.StatusNotFound, "Plugin was not found")
 	}
@@ -102,18 +122,20 @@ func thumbCached(c *gin.Context) {
 	name := c.Params.ByName("name")
 	url := getThemeThumbnailCached(name)
 	if url != "" {
-		c.Redirect(http.StatusMovedPermanently, url)
+		c.Redirect(http.StatusFound, url)
 	} else {
 		c.String(http.StatusNotFound, "Theme was not found")
 	}
 }
 
-func GetMainEngine() *gin.Engine {
+func getMainEngine() *gin.Engine {
 	r := gin.Default()
 	nr := os.Getenv("NEWRELIC")
 	if nr != "" {
 		r.Use(newrelic.NewRelic(nr, "wpapi", false))
 	}
+	r.GET("/theme/:name/zip", themeCachedString)
+	r.GET("/plugin/:name/zip", pluginCachedString)
 
 	r.HEAD("/theme/:name/download", themeCached)
 	r.GET("/theme/:name/download", themeCached)
@@ -124,7 +146,7 @@ func GetMainEngine() *gin.Engine {
 }
 
 func main() {
-	r := GetMainEngine()
+	r := getMainEngine()
 
 	port := os.Getenv("PORT")
 	if port == "" {
