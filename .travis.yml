@@ -4,6 +4,7 @@ go:
 sudo: false
 install:
 - go get -v
+- go get -t -v
 script:
 - go test -v
 deploy:
